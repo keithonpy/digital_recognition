@@ -32,7 +32,13 @@ def compute_probabilities(X, theta, temp_parameter):
         H - (k, n) NumPy array, where each entry H[j][i] is the probability that X[i] is labeled as j
     """
     #YOUR CODE HERE
-    raise NotImplementedError
+   
+    Z = theta@X.T / temp_parameter
+    C = Z.max(axis = 0)
+    
+    d = np.exp(Z - C)
+    H = d / d.sum(axis = 0)
+    return H
 
 def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     """
@@ -51,8 +57,14 @@ def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
         c - the cost value (scalar)
     """
     #YOUR CODE HERE
-    raise NotImplementedError
+    n = X.shape[0]
+    probabilities = compute_probabilities(X, theta, temp_parameter)
+    selected_prob = np.choose(Y, probabilities)
+    loss = -1/ n * np.sum(np.log(selected_prob))
+    regularize =  lambda_factor / 2 * np.sum(np.square(theta))
+    return loss + regularize
 
+    
 def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_parameter):
     """
     Runs one step of batch gradient descent
@@ -71,7 +83,17 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
         theta - (k, d) NumPy array that is the final value of parameters theta
     """
     #YOUR CODE HERE
-    raise NotImplementedError
+    n = X.shape[0]
+    k = theta.shape[0]
+    probability = compute_probabilities(X, theta, temp_parameter)
+    loss = - np.sum(sparse.coo_matrix(([1]*n, (Y, range(n))), shape = (k, n)).toarray() - probability) / (temp_parameter*n)
+    regularize = lambda_factor * theta
+    dJ = loss + regularize
+
+    theta -= alpha* dJ
+
+    return theta
+    
 
 def update_y(train_y, test_y):
     """
