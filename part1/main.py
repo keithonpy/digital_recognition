@@ -41,7 +41,7 @@ def run_linear_regression_on_MNIST(lambda_factor=1):
 
 
 # Don't run this until the relevant functions in linear_regression.py have been fully implemented.
-print('Linear Regression test_error =', run_linear_regression_on_MNIST(lambda_factor=1))
+print('Linear Regression test_error =', run_linear_regression_on_MNIST(lambda_factor=0.01))
 
 
 #######################################################################
@@ -114,7 +114,9 @@ def run_softmax_on_MNIST(temp_parameter=1):
 
     # TODO: add your code here for the "Using the Current Model" question in tab 4.
     #      and print the test_error_mod3
-    return test_error
+    train_y, test_y = update_y(train_y, test_y)
+    test_error_mod3 = compute_test_error_mod3(test_x, test_y, theta, temp_parameter)
+    return test_error_mod3
 
 
 print('softmax test_error=', run_softmax_on_MNIST(temp_parameter=1))
@@ -135,7 +137,7 @@ def run_softmax_on_MNIST_mod3(temp_parameter=1):
     See run_softmax_on_MNIST for more info.
     """
     # YOUR CODE HERE
-    raise NotImplementedError
+    pass
 
 
 # TODO: Run run_softmax_on_MNIST_mod3(), report the error rate

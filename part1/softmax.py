@@ -86,7 +86,7 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
     n = X.shape[0]
     k = theta.shape[0]
     probability = compute_probabilities(X, theta, temp_parameter)
-    loss = - np.sum(sparse.coo_matrix(([1]*n, (Y, range(n))), shape = (k, n)).toarray() - probability) / (temp_parameter*n)
+    loss = - (sparse.coo_matrix(([1]*n, (Y, range(n))), shape = (k, n)).toarray() - probability) @ X / (temp_parameter*n)
     regularize = lambda_factor * theta
     dJ = loss + regularize
 
@@ -113,7 +113,9 @@ def update_y(train_y, test_y):
                     for each datapoint in the test set
     """
     #YOUR CODE HERE
-    raise NotImplementedError
+    train_y_mod3 = train_y % 3
+    test_y_mod3 = test_y % 3
+    return (train_y_mod3, test_y_mod3)
 
 def compute_test_error_mod3(X, Y, theta, temp_parameter):
     """
@@ -131,7 +133,9 @@ def compute_test_error_mod3(X, Y, theta, temp_parameter):
         test_error - the error rate of the classifier (scalar)
     """
     #YOUR CODE HERE
-    raise NotImplementedError
+    predict = get_classification(X, theta, temp_parameter)
+    test_error = 1 - np.mean(np.remainder(predict,3) == Y)
+    return test_error
 
 def softmax_regression(X, Y, temp_parameter, alpha, lambda_factor, k, num_iterations):
     """
