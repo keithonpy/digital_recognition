@@ -20,7 +20,8 @@ def polynomial_kernel(X, Y, c, p):
             kernel_matrix - (n, m) Numpy array containing the kernel matrix
     """
     # YOUR CODE HERE
-    raise NotImplementedError
+    return (X @ Y.T + c)**p
+    
 
 
 
@@ -39,4 +40,15 @@ def rbf_kernel(X, Y, gamma):
             kernel_matrix - (n, m) Numpy array containing the kernel matrix
     """
     # YOUR CODE HERE
-    raise NotImplementedError
+    print("X, Y = ", X, ",",  Y)
+    XTX = np.mat([np.dot(row, row) for row in X]).T
+    YTY = np.mat([np.dot(row, row) for row in Y]).T
+    print("XTX, YTY = ", XTX, ",", YTY)
+    XTX_matrix = np.repeat(XTX, Y.shape[0], axis=1)
+    YTY_matrix = np.repeat(YTY, X.shape[0], axis=1).T
+    print("XTX_matrix, YTY_matrix = ", XTX_matrix, ",", YTY_matrix)
+    K = np.asarray((XTX_matrix + YTY_matrix - 2 * (X @ Y.T)), dtype='float64')
+    print("K = ", K)
+    K *= - gamma
+    return np.exp(K, K)
+    
