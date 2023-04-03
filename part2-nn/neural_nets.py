@@ -21,6 +21,7 @@ def rectified_linear_unit(x):
 def rectified_linear_unit_derivative(x):
     """ Returns the derivative of ReLU."""
     # TODO
+    return 0 if x <= 0 else 1
 
 def output_layer_activation(x):
     """ Linear function, returns input as is. """
@@ -52,21 +53,24 @@ class NeuralNetwork():
 
     def train(self, x1, x2, y):
 
+        vec_relu = np.vectorize(rectified_linear_unit)
+        vec_relu_de = np.vectorize(rectified_linear_unit_derivative)
+
         ### Forward propagation ###
         input_values = np.matrix([[x1],[x2]]) # 2 by 1
 
         # Calculate the input and activation of the hidden layer
-        hidden_layer_weighted_input = # TODO (3 by 1 matrix)
-        hidden_layer_activation = # TODO (3 by 1 matrix)
+        hidden_layer_weighted_input = self.input_to_hidden_weights * input_values + self.biases# TODO (3 by 1 matrix)
+        hidden_layer_activation = vec_relu(hidden_layer_weighted_input)# TODO (3 by 1 matrix)
 
-        output =  # TODO
-        activated_output = # TODO
+        output =  self.hidden_to_output_weights * hidden_layer_activation# TODO
+        activated_output = output_layer_activation(output)# TODO
 
         ### Backpropagation ###
 
         # Compute gradients
-        output_layer_error = # TODO
-        hidden_layer_error = # TODO (3 by 1 matrix)
+        output_layer_error = (activated_output - y) * output_layer_activation_derivative(output)# TODO
+        hidden_layer_error = np.multiply(self.hidden_to_output_weights.T * output_layer_error, vec_relu_de(hidden_layer_weighted_input))# TODO (3 by 1 matrix)
 
         bias_gradients = # TODO
         hidden_to_output_weight_gradients = # TODO
